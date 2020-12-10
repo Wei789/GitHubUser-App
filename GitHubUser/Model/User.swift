@@ -10,12 +10,16 @@ import Foundation
 
 
 struct User: Codable {
-    var avatarUrl: String
+    var avatarUrlString: String
+    var avatarUrl: URL? {
+        return URL(string: avatarUrlString)
+    }
     var login: String
     var siteAdmin: Bool
+    var nextPage: URL?
     
     private enum CodingKeys : String, CodingKey {
-            case avatarUrl = "avatar_url",
+            case avatarUrlString = "avatar_url",
                  login = "login",
                  siteAdmin = "site_admin"
     }

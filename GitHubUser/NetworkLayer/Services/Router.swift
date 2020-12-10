@@ -11,7 +11,7 @@ import Foundation
 
 protocol NetworkRouter: class {
     associatedtype EndPoint: EndPointType
-    func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?) -> ())?)
+    func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?, _ linkHeader: String?) -> ())?)
     func cancel()
 }
 
@@ -27,27 +27,28 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
         }
     }
     
-    func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?) -> ())?) {
+    func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?, _ linkHeader: String?) -> ())?) {
         do {
             let request = try self.buildRequest(from: route)
             print(request.url ?? "")
             task = session.dataTask(with: request) { (data, response, error) in
                 if let response = response as? HTTPURLResponse {
+                    let linkHeader = response.allHeaderFields["Link"] as? String
                     let responseResult: Result<T> = self.handleNetworkResponse(response, data)
                     switch responseResult {
                     case .success(let result):
-                        completion?(result, nil)
+                        completion?(result, nil, linkHeader)
                     case .failure(let networkFailureError):
-                        completion?(nil, networkFailureError)
+                        completion?(nil, networkFailureError, nil)
                     case .parserDataFailure(let parserDataFailureError):
-                        completion?(nil, parserDataFailureError)
+                        completion?(nil, parserDataFailureError, nil)
                     case .buildRequestFailure(let buildRequestFailureError):
-                        completion?(nil, buildRequestFailureError)
+                        completion?(nil, buildRequestFailureError, nil)
                     }
                 }
             }
         } catch {
-            completion?(nil, "requestFailure")
+            completion?(nil, "requestFailure", nil)
         }
         
         self.task.resume()
@@ -71,6 +72,13 @@ extension Router {
             switch route.task {
             case .request:
                 request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "accept")
+            case .requestQuery(let queryString):
+                if var urlStr = request.url?.absoluteString {
+                    urlStr.append(queryString)
+                    if let url = URL(string: urlStr) {
+                        request.url = url
+                    }
+                }
             case .requestParameters(let bodyParameters, let urlParameters):
                 try self.configueParameters(bodyParameters: bodyParameters,
                                             urlParameters: urlParameters,
@@ -120,12 +128,22 @@ extension Router {
                 guard let result: T = try JSONParameterEncoder.decodeData(data: data) else {
                     return .parserDataFailure(NetworkResponse.unableToDecode.rawValue)
                 }
-                
+
                 return .success(result)
             } catch {
                 return .failure(NetworkResponse.unableToDecode.rawValue)
             }
-        case 401...500: return .failure(NetworkResponse.authenticationError.rawValue)
+        case 401...500:
+            do {
+                guard let data = data else {
+                    return .failure(NetworkResponse.authenticationError.rawValue)
+                }
+                
+                let message = try JSONParameterEncoder.decode(data: data)
+                return .failure(message)
+            } catch {
+                return .failure(NetworkResponse.authenticationError.rawValue)
+            }
         case 501...599: return .failure(NetworkResponse.badRequest.rawValue)
         case 600: return .failure(NetworkResponse.outdated.rawValue)
         default: return .failure(NetworkResponse.failed.rawValue)
