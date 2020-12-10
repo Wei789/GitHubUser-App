@@ -10,6 +10,7 @@ import Foundation
 public enum UserAPI {
     case getUsers(since: Int, perPage: Int)
     case getUsersByQuery(query: String)
+    case getUserByUserName(userName: String)
 }
 
 extension UserAPI: EndPointType {
@@ -18,10 +19,7 @@ extension UserAPI: EndPointType {
     }
     
     var path: String {
-        switch self {
-        case .getUsers, .getUsersByQuery:
-            return "users"
-        }
+        return "users"
     }
     
     var httpMethod: HTTPMethod {
@@ -35,6 +33,8 @@ extension UserAPI: EndPointType {
                                                                            "since": since])
         case .getUsersByQuery(let query):
             return .requestQuery(queryString: query)
+        case .getUserByUserName(let userName):
+            return .requestPath(path: userName)
         }
     }
     

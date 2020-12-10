@@ -34,6 +34,14 @@ class UsersViewController: UIViewController {
             }
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == UserDetailViewController.segueID {
+            if let detailVC = segue.destination as? UserDetailViewController {
+                detailVC.userName = sender as? String
+            }
+        }
+    }
 }
 
 extension UsersViewController: UITableViewDataSource, UITableViewDelegate {
@@ -59,5 +67,9 @@ extension UsersViewController: UITableViewDataSource, UITableViewDelegate {
             self.activityIndicator.startAnimating()
             userViewModel.getUsers()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: UserDetailViewController.segueID, sender: userViewModel.users[indexPath.row].login)
     }
 }

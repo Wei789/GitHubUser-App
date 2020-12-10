@@ -8,15 +8,19 @@
 import Foundation
 
 class UserViewModel {
-    let router = Router<UserAPI>()
+    private let router = Router<UserAPI>()
     var getUsersSuccess: (() -> ())?
     var getUsersFail: ((_ error: String) -> ())?
+    var getUserSuccess: (() -> ())?
+    var getUserFail: ((_ error: String) -> ())?
     var isLoading = false
     var users: [User] = [] {
         didSet {
             getUsersSuccess?()
         }
     }
+    
+    var user: UserDetail?
     
     private var linkHeaderQuery: String?
     private var isLast = false
@@ -40,6 +44,20 @@ class UserViewModel {
             if let data = data {
                 self?.users += data
                 self?.processLinkHeader(linkHeader)
+            }
+        }
+    }
+    
+    func getUserByUserName(userName: String) {
+        router.request(.getUserByUserName(userName: userName)) {[weak self] (data: UserDetail?, error, linkHeader) in
+            if let error = error {
+                self?.getUserFail?(error)
+                return
+            }
+            
+            if let data = data {
+                self?.user = data
+                self?.getUserSuccess?()
             }
         }
     }

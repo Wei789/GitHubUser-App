@@ -72,6 +72,8 @@ extension Router {
             switch route.task {
             case .request:
                 request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "accept")
+            case .requestPath(let path):
+                request.url?.appendPathComponent(path)
             case .requestQuery(let queryString):
                 if var urlStr = request.url?.absoluteString {
                     urlStr.append(queryString)
