@@ -20,6 +20,9 @@
 		353098BB2581AC590018BD38 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098B22581AC590018BD38 /* HTTPMethod.swift */; };
 		353098BC2581AC590018BD38 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098B32581AC590018BD38 /* Router.swift */; };
 		353098BD2581AC590018BD38 /* EndPointType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098B42581AC590018BD38 /* EndPointType.swift */; };
+		353098C12581ACF10018BD38 /* UserEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098C02581ACF10018BD38 /* UserEndPoint.swift */; };
+		353098C82581AE370018BD38 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098C72581AE370018BD38 /* UserViewModel.swift */; };
+		353098CC2581AE820018BD38 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098CB2581AE820018BD38 /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,9 @@
 		353098B22581AC590018BD38 /* HTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
 		353098B32581AC590018BD38 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		353098B42581AC590018BD38 /* EndPointType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointType.swift; sourceTree = "<group>"; };
+		353098C02581ACF10018BD38 /* UserEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEndPoint.swift; sourceTree = "<group>"; };
+		353098C72581AE370018BD38 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
+		353098CB2581AE820018BD38 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +79,7 @@
 				353098A52581ABFC0018BD38 /* View */,
 				353098A62581AC070018BD38 /* Controller */,
 				353098A72581AC110018BD38 /* ViewModel */,
+				353098CA2581AE740018BD38 /* Model */,
 				353098A82581AC590018BD38 /* NetworkLayer */,
 				353098A22581ABC20018BD38 /* Supporting Files */,
 			);
@@ -110,6 +117,7 @@
 		353098A72581AC110018BD38 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				353098C72581AE370018BD38 /* UserViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -137,6 +145,7 @@
 		353098AD2581AC590018BD38 /* EndPoint */ = {
 			isa = PBXGroup;
 			children = (
+				353098C02581ACF10018BD38 /* UserEndPoint.swift */,
 			);
 			path = EndPoint;
 			sourceTree = "<group>";
@@ -150,6 +159,14 @@
 				353098B42581AC590018BD38 /* EndPointType.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		353098CA2581AE740018BD38 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				353098CB2581AE820018BD38 /* User.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,7 +239,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				353098CC2581AE820018BD38 /* User.swift in Sources */,
 				353098BC2581AC590018BD38 /* Router.swift in Sources */,
+				353098C82581AE370018BD38 /* UserViewModel.swift in Sources */,
 				3530989225810C6D0018BD38 /* ViewController.swift in Sources */,
 				3530988E25810C6D0018BD38 /* AppDelegate.swift in Sources */,
 				353098BA2581AC590018BD38 /* HTTPTask.swift in Sources */,
@@ -232,6 +251,7 @@
 				353098BD2581AC590018BD38 /* EndPointType.swift in Sources */,
 				353098BB2581AC590018BD38 /* HTTPMethod.swift in Sources */,
 				3530989025810C6D0018BD38 /* SceneDelegate.swift in Sources */,
+				353098C12581ACF10018BD38 /* UserEndPoint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,7 +400,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 82RMH3R82L;
-				INFOPLIST_FILE = GitHubUser/Info.plist;
+				INFOPLIST_FILE = "GitHubUser/Supporting FIles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -388,7 +408,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.home.work.GitHubUser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -399,7 +419,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 82RMH3R82L;
-				INFOPLIST_FILE = GitHubUser/Info.plist;
+				INFOPLIST_FILE = "GitHubUser/Supporting FIles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -407,7 +427,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.home.work.GitHubUser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

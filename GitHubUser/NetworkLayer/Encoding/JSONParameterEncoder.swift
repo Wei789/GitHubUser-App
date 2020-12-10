@@ -40,6 +40,7 @@ class JSONParameterEncoder: ParameterEncoder {
             let result = try decoder.decode(T.self, from: data)
             return result
         }catch {
+            print(error)
             throw NetworkError.decodingFailed
         }
     }

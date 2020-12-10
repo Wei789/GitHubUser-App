@@ -70,7 +70,7 @@ extension Router {
         do {
             switch route.task {
             case .request:
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "accept")
             case .requestParameters(let bodyParameters, let urlParameters):
                 try self.configueParameters(bodyParameters: bodyParameters,
                                             urlParameters: urlParameters,
@@ -109,7 +109,7 @@ extension Router {
         }
     }
     
-    fileprivate func handleNetworkResponse< T: Codable>(_ response: HTTPURLResponse, _ data: Data?) -> Result<T> {
+    fileprivate func handleNetworkResponse<T: Codable>(_ response: HTTPURLResponse, _ data: Data?) -> Result<T> {
         switch response.statusCode {
         case 200...299:
             guard let data = data else {
