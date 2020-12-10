@@ -13,6 +13,13 @@
 		3530989525810C6D0018BD38 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3530989325810C6D0018BD38 /* Main.storyboard */; };
 		3530989725810C6F0018BD38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3530989625810C6F0018BD38 /* Assets.xcassets */; };
 		3530989A25810C6F0018BD38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3530989825810C6F0018BD38 /* LaunchScreen.storyboard */; };
+		353098B52581AC590018BD38 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098AA2581AC590018BD38 /* ParameterEncoding.swift */; };
+		353098B62581AC590018BD38 /* URLParameterEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098AB2581AC590018BD38 /* URLParameterEncoder.swift */; };
+		353098B72581AC590018BD38 /* JSONParameterEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098AC2581AC590018BD38 /* JSONParameterEncoder.swift */; };
+		353098BA2581AC590018BD38 /* HTTPTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098B12581AC590018BD38 /* HTTPTask.swift */; };
+		353098BB2581AC590018BD38 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098B22581AC590018BD38 /* HTTPMethod.swift */; };
+		353098BC2581AC590018BD38 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098B32581AC590018BD38 /* Router.swift */; };
+		353098BD2581AC590018BD38 /* EndPointType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353098B42581AC590018BD38 /* EndPointType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +31,13 @@
 		3530989625810C6F0018BD38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3530989925810C6F0018BD38 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3530989B25810C6F0018BD38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		353098AA2581AC590018BD38 /* ParameterEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterEncoding.swift; sourceTree = "<group>"; };
+		353098AB2581AC590018BD38 /* URLParameterEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLParameterEncoder.swift; sourceTree = "<group>"; };
+		353098AC2581AC590018BD38 /* JSONParameterEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParameterEncoder.swift; sourceTree = "<group>"; };
+		353098B12581AC590018BD38 /* HTTPTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPTask.swift; sourceTree = "<group>"; };
+		353098B22581AC590018BD38 /* HTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
+		353098B32581AC590018BD38 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		353098B42581AC590018BD38 /* EndPointType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndPointType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +70,86 @@
 		3530988C25810C6D0018BD38 /* GitHubUser */ = {
 			isa = PBXGroup;
 			children = (
+				353098A52581ABFC0018BD38 /* View */,
+				353098A62581AC070018BD38 /* Controller */,
+				353098A72581AC110018BD38 /* ViewModel */,
+				353098A82581AC590018BD38 /* NetworkLayer */,
+				353098A22581ABC20018BD38 /* Supporting Files */,
+			);
+			path = GitHubUser;
+			sourceTree = "<group>";
+		};
+		353098A22581ABC20018BD38 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
 				3530988D25810C6D0018BD38 /* AppDelegate.swift */,
 				3530988F25810C6D0018BD38 /* SceneDelegate.swift */,
-				3530989125810C6D0018BD38 /* ViewController.swift */,
-				3530989325810C6D0018BD38 /* Main.storyboard */,
 				3530989625810C6F0018BD38 /* Assets.xcassets */,
 				3530989825810C6F0018BD38 /* LaunchScreen.storyboard */,
 				3530989B25810C6F0018BD38 /* Info.plist */,
 			);
-			path = GitHubUser;
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		353098A52581ABFC0018BD38 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3530989325810C6D0018BD38 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		353098A62581AC070018BD38 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3530989125810C6D0018BD38 /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		353098A72581AC110018BD38 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		353098A82581AC590018BD38 /* NetworkLayer */ = {
+			isa = PBXGroup;
+			children = (
+				353098A92581AC590018BD38 /* Encoding */,
+				353098AD2581AC590018BD38 /* EndPoint */,
+				353098B02581AC590018BD38 /* Services */,
+			);
+			path = NetworkLayer;
+			sourceTree = "<group>";
+		};
+		353098A92581AC590018BD38 /* Encoding */ = {
+			isa = PBXGroup;
+			children = (
+				353098AA2581AC590018BD38 /* ParameterEncoding.swift */,
+				353098AB2581AC590018BD38 /* URLParameterEncoder.swift */,
+				353098AC2581AC590018BD38 /* JSONParameterEncoder.swift */,
+			);
+			path = Encoding;
+			sourceTree = "<group>";
+		};
+		353098AD2581AC590018BD38 /* EndPoint */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = EndPoint;
+			sourceTree = "<group>";
+		};
+		353098B02581AC590018BD38 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				353098B12581AC590018BD38 /* HTTPTask.swift */,
+				353098B22581AC590018BD38 /* HTTPMethod.swift */,
+				353098B32581AC590018BD38 /* Router.swift */,
+				353098B42581AC590018BD38 /* EndPointType.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +222,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				353098BC2581AC590018BD38 /* Router.swift in Sources */,
 				3530989225810C6D0018BD38 /* ViewController.swift in Sources */,
 				3530988E25810C6D0018BD38 /* AppDelegate.swift in Sources */,
+				353098BA2581AC590018BD38 /* HTTPTask.swift in Sources */,
+				353098B72581AC590018BD38 /* JSONParameterEncoder.swift in Sources */,
+				353098B52581AC590018BD38 /* ParameterEncoding.swift in Sources */,
+				353098B62581AC590018BD38 /* URLParameterEncoder.swift in Sources */,
+				353098BD2581AC590018BD38 /* EndPointType.swift in Sources */,
+				353098BB2581AC590018BD38 /* HTTPMethod.swift in Sources */,
 				3530989025810C6D0018BD38 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
