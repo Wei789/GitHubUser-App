@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 struct User: Codable {
     var avatarUrlString: String
     var login: String
@@ -26,13 +24,16 @@ struct User: Codable {
 
 
 struct UserDetail: Codable {
+    var id: Int
     var avatarUrlString: String
     var login: String
-    var name: String
+    var name: String?
     var bio: String?
     var siteAdmin: Bool
     var location: String?
     var blog: String
+    var followers: Int
+    var following: Int
     var avatarUrl: URL? {
         return URL(string: avatarUrlString)
     }
@@ -44,6 +45,25 @@ struct UserDetail: Codable {
              name = "name",
              bio = "bio",
              location = "location",
-             blog = "blog"
+             blog = "blog",
+             followers = "followers",
+             following = "following",
+             id = "id"
     }
+}
+
+struct Follower: Codable {
+    var id: Int
+    var login: String
+}
+
+struct Empty: Codable {
+    
+}
+
+
+enum FollowType: Int {
+    case following = 2
+    case follower = 1
+    case bidirectionalFollowed = 0
 }

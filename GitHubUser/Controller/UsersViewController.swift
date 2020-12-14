@@ -16,7 +16,6 @@ class UsersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        userViewModel.getUsers()
         activityIndicator.startAnimating()
         userViewModel.getUsersSuccess = { [weak self] in
             DispatchQueue.main.async {
@@ -33,6 +32,8 @@ class UsersViewController: UIViewController {
                 self?.present(alert, animated: true, completion: nil)
             }
         }
+        
+        userViewModel.getUsers(since: 0)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -71,5 +72,6 @@ extension UsersViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: UserDetailViewController.segueID, sender: userViewModel.users[indexPath.row].login)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

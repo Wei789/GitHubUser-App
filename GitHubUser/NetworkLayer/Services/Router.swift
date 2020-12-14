@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 protocol NetworkRouter: class {
     associatedtype EndPoint: EndPointType
     func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?, _ linkHeader: String?) -> ())?)
@@ -66,21 +65,13 @@ extension Router {
             baseURL = url
         }
         
-        var request = URLRequest(url: baseURL.appendingPathComponent(route.path), cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
+        let url = baseURL.appendingPathComponent(route.path).absoluteString.removingPercentEncoding
+        var request = URLRequest(url: URL(string: url!)!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
         request.httpMethod = route.httpMethod.rawValue
         do {
             switch route.task {
             case .request:
                 request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "accept")
-            case .requestPath(let path):
-                request.url?.appendPathComponent(path)
-            case .requestQuery(let queryString):
-                if var urlStr = request.url?.absoluteString {
-                    urlStr.append(queryString)
-                    if let url = URL(string: urlStr) {
-                        request.url = url
-                    }
-                }
             case .requestParameters(let bodyParameters, let urlParameters):
                 try self.configueParameters(bodyParameters: bodyParameters,
                                             urlParameters: urlParameters,
@@ -122,6 +113,10 @@ extension Router {
     fileprivate func handleNetworkResponse<T: Codable>(_ response: HTTPURLResponse, _ data: Data?) -> Result<T> {
         switch response.statusCode {
         case 200...299:
+            if response.statusCode == 204 {
+                return .failure(NetworkResponse.noData.rawValue)
+            }
+            
             guard let data = data else {
                 return .failure(NetworkResponse.noData.rawValue)
             }
@@ -130,13 +125,17 @@ extension Router {
                 guard let result: T = try JSONParameterEncoder.decodeData(data: data) else {
                     return .parserDataFailure(NetworkResponse.unableToDecode.rawValue)
                 }
-
+                
                 return .success(result)
             } catch {
                 return .failure(NetworkResponse.unableToDecode.rawValue)
             }
         case 401...500:
             do {
+                if response.statusCode == 404 {
+                    return .failure(NetworkResponse.notFound.rawValue)
+                }
+                
                 guard let data = data else {
                     return .failure(NetworkResponse.authenticationError.rawValue)
                 }
@@ -168,6 +167,7 @@ enum NetworkResponse:String {
     case failed = "Network request failed."
     case noData = "Response returned with no data to decode."
     case unableToDecode = "We could not decode the response."
+    case notFound = "Not Found"
 }
 
 enum NetworkEnvironment {

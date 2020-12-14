@@ -9,7 +9,6 @@ import UIKit
 
 class UserTableViewCell: UITableViewCell {
     static let identifier = "UserTableViewCell"
-
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var loginLabel: UILabel!
     @IBOutlet weak var siteAdminLabel: UILabel!
