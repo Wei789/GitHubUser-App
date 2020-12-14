@@ -145,12 +145,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="76L-Fq-fsA">
-                                <rect key="frame" x="121.5" y="361" width="171" height="102"/>
+                                <rect key="frame" x="115.5" y="361" width="183" height="102"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0QX-FS-Bnc">
-                                        <rect key="frame" x="0.0" y="0.0" width="171" height="34"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="183" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <state key="normal" title="bidirectional followed">
+                                        <state key="normal" title="- bidirectional followed">
                                             <color key="titleColor" systemColor="systemBlueColor"/>
                                         </state>
                                         <connections>
