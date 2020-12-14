@@ -9,7 +9,7 @@ import UIKit
 
 class UserDetailViewController: UIViewController {
     static let segueID = "toDetailSegue"
-    let userViewModel = UserViewModel()
+    var userViewModel: UserViewModel!
     var userName: String!
     var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var avatorImageView: UIImageView!
@@ -20,6 +20,7 @@ class UserDetailViewController: UIViewController {
     @IBOutlet weak var followerButon: UIButton!
     @IBOutlet weak var followingButon: UIButton!
     @IBOutlet weak var bidirectionalFollowedButon: UIButton!
+    @IBOutlet weak var favoriteSwtich: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +42,9 @@ class UserDetailViewController: UIViewController {
                 self?.activityIndicator.stopAnimating()
                 self?.followerButon.setTitle("\(self?.userViewModel.user?.followers ?? 0) followers", for: .normal)
                 self?.followingButon.setTitle("\(self?.userViewModel.user?.following ?? 0) following", for: .normal)
+                if let isOn = self?.userViewModel.favoriteUsers.contains(self?.userViewModel.user?.login ?? "" ) {
+                    self?.favoriteSwtich.isOn = isOn
+                }
                 
                 self?.userViewModel.getBidirectionalFollowed()
             }
@@ -50,17 +54,27 @@ class UserDetailViewController: UIViewController {
         userViewModel.getBidirectionalFollowersSuccess = {[weak self] in
             DispatchQueue.main.async {
                 self?.bidirectionalFollowedButon.setTitle("\(self?.userViewModel.bidirectionalFollowed.count ?? 0) bidirectional followed", for: .normal)
+                self?.followerButon.isEnabled = true
+                self?.followingButon.isEnabled = true
+                self?.bidirectionalFollowedButon.isEnabled = true
             }
         }
         
         userViewModel.getUserFail = errorHandler()
     }
     
+    @IBAction func favoriteChange(_ sender: UISwitch) {
+        if sender.isOn {
+            self.userViewModel.saveFavoriteUser(login: self.userViewModel.user!.login)
+        } else {
+            self.userViewModel.removeFavoriteUser(login: self.userViewModel.user!.login)
+        }
+    }
+    
     @IBAction func toFollowList(_ sender: UIButton) {
         userViewModel.followType = FollowType(rawValue: sender.tag)
         if let followController = storyboard?.instantiateViewController(identifier: "FollowViewController") as? FollowViewController {
             followController.userViewModel = userViewModel
-            followController.userName = userName
             self.navigationController?.pushViewController(followController, animated: true)
         }
     }

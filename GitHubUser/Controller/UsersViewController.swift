@@ -13,6 +13,7 @@ class UsersViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     let userViewModel = UserViewModel()
+    var reloadIndex: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,9 +37,19 @@ class UsersViewController: UIViewController {
         userViewModel.getUsers(since: 0)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let reloadIndex = reloadIndex {
+            DispatchQueue.main.async {
+                self.userTableView.reloadRows(at: [reloadIndex], with: .automatic)
+            }
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == UserDetailViewController.segueID {
             if let detailVC = segue.destination as? UserDetailViewController {
+                detailVC.userViewModel = userViewModel
                 detailVC.userName = sender as? String
             }
         }
@@ -58,6 +69,14 @@ extension UsersViewController: UITableViewDataSource, UITableViewDelegate {
         cell.loginLabel.text = userViewModel.users[indexPath.row].login
         cell.siteAdminLabel.text = "\(userViewModel.users[indexPath.row].siteAdmin)"
         cell.userImageView.sd_setImage(with: userViewModel.users[indexPath.row].avatarUrl, placeholderImage: nil)
+        cell.isFavoriteUser.isOn = userViewModel.favoriteUsers.contains(userViewModel.users[indexPath.row].login)
+        cell.favoriteChange = { [unowned self] in
+            if cell.isFavoriteUser.isOn {
+                self.userViewModel.saveFavoriteUser(login: self.userViewModel.users[indexPath.row].login)
+            } else {
+                self.userViewModel.removeFavoriteUser(login: self.userViewModel.users[indexPath.row].login)
+            }
+        }
         
         return cell
     }
@@ -72,6 +91,7 @@ extension UsersViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: UserDetailViewController.segueID, sender: userViewModel.users[indexPath.row].login)
+        reloadIndex = indexPath
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

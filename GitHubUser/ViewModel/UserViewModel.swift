@@ -22,6 +22,8 @@ class UserViewModel {
     
     let group = DispatchGroup()
     let maxPerpage = 100
+    let favoriteUsersDefaultKey = "favoriteUsers"
+    let userDefault: UserDefaults!
     var isLoading = false
     var isFollowingLast = false
     var isFollowersLast = false
@@ -34,13 +36,14 @@ class UserViewModel {
             getFollowersSuccess?()
         }
     }
+    
     var following: [Follower] = [] {
         didSet {
             getFollowingSuccess?()
         }
     }
     var bidirectionalFollowed: [Follower] = []
-    var followResult: [Follower] = []
+    var favoriteUsers: [String] = []
     private var userNextQuery: [String: Int] = [:]
     private var userLastQuery: [String: Int] = [:]
     private var followersNextQuery: [String: Int] = [:]
@@ -52,10 +55,16 @@ class UserViewModel {
             getUserByUserNameSuccess?()
         }
     }
+    
     var users: [User] = [] {
         didSet {
             getUsersSuccess?()
         }
+    }
+    
+    init() {
+        userDefault = UserDefaults()
+        favoriteUsers = userDefault.value(forKey: favoriteUsersDefaultKey) as? [String] ?? []
     }
     
     func getUserByUserName(userName: String) {
@@ -110,7 +119,8 @@ class UserViewModel {
         // step2. 取得totalCallAPICount = (followingCount + followersCount) / 100(max per page)
         // step3. if totalCallAPICount <= minCount then 取得所有follwing和followers做intersection得到bidirectional Follower list
         //        else call check follow API check step1 following or followers 最小數量
-        
+        self.followers = []
+        self.following = []
         if let followingCount = user?.following, let followersCount = user?.followers {
             if followingCount == 0 || followersCount == 0 {
                 return
@@ -250,6 +260,18 @@ class UserViewModel {
                     self?.getFollowing(getAll: getAll)
                 }
             }
+        }
+    }
+    
+    func saveFavoriteUser(login: String) {
+        favoriteUsers.append(login)
+        userDefault.setValue(favoriteUsers, forKey: favoriteUsersDefaultKey)
+    }
+    
+    func removeFavoriteUser(login: String) {
+        if let index = favoriteUsers.firstIndex(of: login) {
+            favoriteUsers.remove(at: index)
+            userDefault.setValue(favoriteUsers, forKey: favoriteUsersDefaultKey)
         }
     }
     

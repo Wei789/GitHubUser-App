@@ -11,7 +11,6 @@ class FollowViewController: UIViewController {
     @IBOutlet weak var followTableView: UITableView!
     var activityIndicator: UIActivityIndicatorView!
     var userViewModel: UserViewModel!
-    var userName: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,6 +85,7 @@ extension FollowViewController: UITableViewDataSource, UITableViewDelegate {
         default:
             break
         }
+        
         cell.textLabel?.text = "\(indexPath.row). " + result[indexPath.row].login
         
         return cell

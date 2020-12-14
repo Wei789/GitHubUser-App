@@ -49,7 +49,7 @@ extension UserAPI: EndPointType {
             return .requestParameters(bodyParameters: nil, urlParameters: ["page": page, "per_page": perPage])
         case .getFollowing( _, let page, let perPage):
             return .requestParameters(bodyParameters: nil, urlParameters: ["page": page, "per_page": perPage])
-        case .checkUserFollows(userName: let userName, targetName: let targetName):
+        case .checkUserFollows( _,  _):
             return .request
         }
     }

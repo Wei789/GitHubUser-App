@@ -12,4 +12,10 @@ class UserTableViewCell: UITableViewCell {
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var loginLabel: UILabel!
     @IBOutlet weak var siteAdminLabel: UILabel!
+    @IBOutlet weak var isFavoriteUser: UISwitch!
+    var favoriteChange: (() -> ())?
+    
+    @IBAction func favoriteChange(_ sender: UISwitch) {
+        favoriteChange?()
+    }
 }
