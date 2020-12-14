@@ -8,10 +8,9 @@
 
 import Foundation
 
-
 protocol NetworkRouter: class {
     associatedtype EndPoint: EndPointType
-    func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?) -> ())?)
+    func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?, _ linkHeader: String?) -> ())?)
     func cancel()
 }
 
@@ -27,27 +26,28 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
         }
     }
     
-    func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?) -> ())?) {
+    func request<T: Codable>(_ route: EndPoint, completion: ((_ data: T?, _ error: String?, _ linkHeader: String?) -> ())?) {
         do {
             let request = try self.buildRequest(from: route)
             print(request.url ?? "")
             task = session.dataTask(with: request) { (data, response, error) in
                 if let response = response as? HTTPURLResponse {
+                    let linkHeader = response.allHeaderFields["Link"] as? String
                     let responseResult: Result<T> = self.handleNetworkResponse(response, data)
                     switch responseResult {
                     case .success(let result):
-                        completion?(result, nil)
+                        completion?(result, nil, linkHeader)
                     case .failure(let networkFailureError):
-                        completion?(nil, networkFailureError)
+                        completion?(nil, networkFailureError, nil)
                     case .parserDataFailure(let parserDataFailureError):
-                        completion?(nil, parserDataFailureError)
+                        completion?(nil, parserDataFailureError, nil)
                     case .buildRequestFailure(let buildRequestFailureError):
-                        completion?(nil, buildRequestFailureError)
+                        completion?(nil, buildRequestFailureError, nil)
                     }
                 }
             }
         } catch {
-            completion?(nil, "requestFailure")
+            completion?(nil, "requestFailure", nil)
         }
         
         self.task.resume()
@@ -65,7 +65,8 @@ extension Router {
             baseURL = url
         }
         
-        var request = URLRequest(url: baseURL.appendingPathComponent(route.path), cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
+        let url = baseURL.appendingPathComponent(route.path).absoluteString.removingPercentEncoding
+        var request = URLRequest(url: URL(string: url!)!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
         request.httpMethod = route.httpMethod.rawValue
         do {
             switch route.task {
@@ -112,6 +113,10 @@ extension Router {
     fileprivate func handleNetworkResponse<T: Codable>(_ response: HTTPURLResponse, _ data: Data?) -> Result<T> {
         switch response.statusCode {
         case 200...299:
+            if response.statusCode == 204 {
+                return .failure(NetworkResponse.noData.rawValue)
+            }
+            
             guard let data = data else {
                 return .failure(NetworkResponse.noData.rawValue)
             }
@@ -125,7 +130,21 @@ extension Router {
             } catch {
                 return .failure(NetworkResponse.unableToDecode.rawValue)
             }
-        case 401...500: return .failure(NetworkResponse.authenticationError.rawValue)
+        case 401...500:
+            do {
+                if response.statusCode == 404 {
+                    return .failure(NetworkResponse.notFound.rawValue)
+                }
+                
+                guard let data = data else {
+                    return .failure(NetworkResponse.authenticationError.rawValue)
+                }
+                
+                let message = try JSONParameterEncoder.decode(data: data)
+                return .failure(message)
+            } catch {
+                return .failure(NetworkResponse.authenticationError.rawValue)
+            }
         case 501...599: return .failure(NetworkResponse.badRequest.rawValue)
         case 600: return .failure(NetworkResponse.outdated.rawValue)
         default: return .failure(NetworkResponse.failed.rawValue)
@@ -148,6 +167,7 @@ enum NetworkResponse:String {
     case failed = "Network request failed."
     case noData = "Response returned with no data to decode."
     case unableToDecode = "We could not decode the response."
+    case notFound = "Not Found"
 }
 
 enum NetworkEnvironment {

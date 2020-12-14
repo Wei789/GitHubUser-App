@@ -22,6 +22,20 @@ class JSONParameterEncoder: ParameterEncoder {
         }
     }
     
+    static func decode(data: Data) throws -> String {
+        do {
+            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+               let message = json["message"] as? String {
+                return message
+            }
+            
+            return NetworkError.decodingFailed.rawValue
+        } catch let error as NSError {
+            print("Failed to load: \(error.localizedDescription)")
+            throw NetworkError.decodingFailed
+        }
+    }
+    
     static func encode<T: Encodable>(urlRequest: inout URLRequest, with input: T) throws {
         do {
             let jsonAsData = try encodeData(data: input)
